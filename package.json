@@ -1,0 +1,9 @@
+{
+  "name": "manifest-mcp",
+  "private": true,
+  "description": "The MCP connector server behind readthemanifest.net — one link that lets Claude and ChatGPT read your manifest and save facts to it. Token-derived encryption; no accounts.",
+  "license": "MIT",
+  "dependencies": {
+    "@netlify/blobs": "^8.2.0"
+  }
+}

@@ -1,0 +1,6 @@
+# manifest-mcp: functions only — deploy this to your own Netlify account to run
+# your own connector server (the function code declares its own URL paths).
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
