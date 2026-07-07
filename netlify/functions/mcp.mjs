@@ -16,6 +16,7 @@ import {
   appendNote,
   MAX_NOTE_BYTES,
 } from './_lib/vault.mjs';
+import { bump } from './_lib/counters.mjs';
 
 export const config = { path: '/mcp/:token' };
 
@@ -93,6 +94,7 @@ export default async (req, context) => {
         if (name === 'get_manifest') {
           const manifest = await loadManifest(token);
           if (manifest === null) return toolError(msg.id, 'No manifest found for this URL. The user should recreate it at readthemanifest.net.');
+          await bump('mcp_read');
           return toolText(msg.id, manifest);
         }
 
@@ -104,6 +106,7 @@ export default async (req, context) => {
           }
           const updated = await appendNote(token, note);
           if (updated === null) return toolError(msg.id, 'No manifest found for this URL. The user should recreate it at readthemanifest.net.');
+          await bump('mcp_note');
           return toolText(msg.id, 'Saved to the manifest.');
         }
 

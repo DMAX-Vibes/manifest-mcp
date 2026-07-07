@@ -19,6 +19,7 @@ import {
   deleteVault,
   MAX_MANIFEST_BYTES,
 } from './_lib/vault.mjs';
+import { bump } from './_lib/counters.mjs';
 
 export const config = { path: '/api/manifest-vault' };
 
@@ -43,6 +44,7 @@ export default async (req) => {
         if (err) return json(400, { error: err });
         const t = newToken();
         await saveManifest(t, manifest);
+        await bump('vault_create');
         return json(200, { token: t, url: connectorUrl(req, t) });
       }
 
@@ -51,18 +53,21 @@ export default async (req) => {
         if (err) return json(400, { error: err });
         if (!(await vaultExists(token || ''))) return json(404, { error: 'unknown token' });
         await saveManifest(token, manifest);
+        await bump('vault_replace');
         return json(200, { ok: true });
       }
 
       case 'export': {
         const text = await loadManifest(token || '');
         if (text === null) return json(404, { error: 'unknown token' });
+        await bump('vault_export');
         return json(200, { manifest: text });
       }
 
       case 'delete': {
         if (!(await vaultExists(token || ''))) return json(404, { error: 'unknown token' });
         await deleteVault(token);
+        await bump('vault_delete');
         return json(200, { ok: true });
       }
 

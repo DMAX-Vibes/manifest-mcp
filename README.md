@@ -63,6 +63,13 @@ curl -s -X POST http://localhost:8888/mcp/<token> \
 (Offline local dev stores vaults as files under `.netlify/local-blobs/`; deployed, it's
 Netlify Blobs with strong read-after-write consistency.)
 
+## Usage counting
+
+The server tallies how often its endpoints get used — an anonymous counter per
+event name (`vault_create`, `mcp_read`, …) plus a per-day variant, in a separate
+blob store. That's the whole record: no IPs, no user agents, no tokens, no
+manifest content. See `netlify/functions/_lib/counters.mjs` — it's ~30 lines.
+
 ## License
 
 MIT.
